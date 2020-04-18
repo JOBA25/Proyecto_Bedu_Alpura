@@ -1,23 +1,26 @@
 # Proyecto Bedu (Data)
 
-## Título de tu proyecto
+## Sello Rojo
 
-holi :3
 <!-- Agrega aquí el título tentativo de tu proyecto. -->
 
 ### ¿Cuál es la necesidad o problema a resolver? 🚀
+
+:v
 
 <!-- Agrega aquí la necesidad o problemática que esperas resolver con tu proyecto y a qué sector
      beneficiará. -->
 
 ### ¿Cuál es la propuesta para resolver esa necesidad o problema? 💡
 
+:v
 <!-- Describe cómo planeas solucionar el problema. Ejemplo: Voy a consultar una base de datos del
 	 sector salud para predecir el número de compradores de un medicamento. Para ello pretendo 
 	 usar Python porque ... --->
 
 ### ¿Cómo lo vas a hacer? 📋
 
+:v
 <!-- Añade aquí un checklist de tareas y el estado de tus avances, añade tus avances en otras
 	 carpetas y compartelos con el mundo en la sección de avances, no olvides actualizar esta lista
 	 constantemente para organizarte mejor.
