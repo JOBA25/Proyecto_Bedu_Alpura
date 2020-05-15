@@ -1,47 +1,13 @@
 USE sello_rojo;
-/* tabla con el total de ventas por producto*/
-SELECT sum(v.IMP_VENTA_BRUTA) as ventas_totales, p.SKU 
-from ventas v
-join productos p
-on v.ID_PRODUCTO = p.ID_PRODUCTO
-group by p.SKU
-having sum(v.IMP_VENTA_BRUTA) > 5000000
-order by 1 desc;
 
 
-/*ventas por Estado en plazas*/
-SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO
-from ventas v
-join plazas pl
-on v.ID_PLAZA = pl.ID_PLAZA
-group by pl.ESTADO
-order by 1 desc;
-
-select sum(v.IMP_VENTA_BRUTA) as ventas, sum(v.CANTIDAD_VENTA) as cantidad_venta ,cl.Clave_Cliente, cl.SUCURSAL,  pl.ESTADO, pr.FAMILIA, cl.CADENA, cl.RAZON_SOCIAL
-from ventas v
-join clientes cl
-on v.Clave_Cliente = cl.Clave_Cliente
-join plazas pl
-on v.ID_PLAZA = pl.ID_PLAZA
-join productos pr
-on v.ID_PRODUCTO = pr.ID_PRODUCTO
-group by cl.Clave_Cliente, cl.SUCURSAL,  pl.ESTADO, pr.FAMILIA, cl.CADENA, cl.RAZON_SOCIAL
-order by 1 desc;
-
-
-/*ventas por mes*/
-select sum(v.IMP_VENTA_BRUTA) as ventas, month(v.fecha) as Mes
-from ventas v
-group by 2
-order by 1 desc;
 /****************************** lineas para arreglar la conexión con python ***************************************/
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'toor' PASSWORD EXPIRE NEVER;
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'toor';
 /* ******************************************************************************************* */
 
 
-
-/*Tabla completa */
+/*vista de Tabla completa */
 create view dbFull
 as
 select v.FECHA, v.CANTIDAD_VENTA, v.IMP_VENTA_BRUTA, pl.ID_PLAZA, pl.DEPOSITOS, pl.AREA, pl.ESTADO, pl.ZONA, pl.CLAVE,
@@ -53,4 +19,82 @@ on v.ID_PRODUCTO = p.ID_PRODUCTO
 join plazas pl
 on v.ID_PLAZA = pl.ID_PLAZA
 join clientes cl
+on v.Clave_Cliente = cl.Clave_Cliente;
+
+
+/**************************************************ya en la libreta de python*************************************************/
+/* tabla con el total de ventas por producto*/
+/*create view ventas_prod
+as*/
+SELECT sum(v.IMP_VENTA_BRUTA) as ventas_totales, p.SKU 
+from ventas v
+join productos p
+on v.ID_PRODUCTO = p.ID_PRODUCTO
+where p.SKU NOT LIKE  "%Alpura%"
+group by p.SKU
+having sum(v.IMP_VENTA_BRUTA) > 5000000
+order by 1 desc;
+
+
+/**************************************************ya en la libreta de python*************************************************/
+/*ventas por Estado en plazas*/
+/*create view ventas_estado
+as*/
+SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO
+from ventas v
+join plazas pl
+on v.ID_PLAZA = pl.ID_PLAZA
+group by pl.ESTADO
+order by 1 desc
+limit 5;
+
+
+
+/**************************************************ya en la libreta de python*************************************************/
+/*ventas por mes*/
+/*create view ventas_mes
+as*/
+select sum(v.IMP_VENTA_BRUTA) as ventas, monthname(v.fecha) as Mes
+from ventas v
+group by 2;
+/*order by 1 asc;
+*/
+
+
+/****************************************************no agregada******************************************************************/
+select sum(v.IMP_VENTA_BRUTA) as ventas, sum(v.CANTIDAD_VENTA) as cantidad_venta ,cl.Clave_Cliente, cl.SUCURSAL,  pl.ESTADO, pr.FAMILIA, cl.CADENA, cl.RAZON_SOCIAL
+from ventas v
+join clientes cl
 on v.Clave_Cliente = cl.Clave_Cliente
+join plazas pl
+on v.ID_PLAZA = pl.ID_PLAZA
+join productos pr
+on v.ID_PRODUCTO = pr.ID_PRODUCTO
+group by pl.ESTADO, cl.SUCURSAL,cl.Clave_Cliente  , pr.FAMILIA, cl.CADENA, cl.RAZON_SOCIAL
+order by 1 desc;
+
+
+
+/**********************************************************************************************************************/
+/*         productos que generaron más ventas en los 5 estados con mayores ventas*/
+SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO, pl.ID_PLAZA
+		from ventas v
+		join plazas pl
+		on v.ID_PLAZA = pl.ID_PLAZA
+		group by pl.ESTADO
+		order by 1 desc
+		limit 5;
+        
+SELECT sum(v.IMP_VENTA_BRUTA) as ventas_totales, p.SKU, pl.ESTADO 
+from ventas v
+join productos p
+on v.ID_PRODUCTO = p.ID_PRODUCTO
+join (SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO, pl.ID_PLAZA
+		from ventas v
+		join plazas pl
+		on v.ID_PLAZA = pl.ID_PLAZA
+		group by pl.ESTADO
+		order by 1 desc
+		limit 5) as pl
+on v.ID_PLAZA = pl.ID_PLAZA
+group by p.SKU, pl.ESTADO;
