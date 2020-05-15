@@ -30,9 +30,9 @@ SELECT sum(v.IMP_VENTA_BRUTA) as ventas_totales, p.SKU
 from ventas v
 join productos p
 on v.ID_PRODUCTO = p.ID_PRODUCTO
-where p.SKU NOT LIKE  "%Alpura%"
+join plazas pl
+where pl.ESTADO = "Distrito Federal"
 group by p.SKU
-having sum(v.IMP_VENTA_BRUTA) > 5000000
 order by 1 desc;
 
 
@@ -77,24 +77,38 @@ order by 1 desc;
 
 /**********************************************************************************************************************/
 /*         productos que generaron más ventas en los 5 estados con mayores ventas*/
-SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO, pl.ID_PLAZA
-		from ventas v
-		join plazas pl
-		on v.ID_PLAZA = pl.ID_PLAZA
-		group by pl.ESTADO
-		order by 1 desc
-		limit 5;
-        
-SELECT sum(v.IMP_VENTA_BRUTA) as ventas_totales, p.SKU, pl.ESTADO 
-from ventas v
-join productos p
-on v.ID_PRODUCTO = p.ID_PRODUCTO
-join (SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO, pl.ID_PLAZA
-		from ventas v
-		join plazas pl
-		on v.ID_PLAZA = pl.ID_PLAZA
-		group by pl.ESTADO
-		order by 1 desc
-		limit 5) as pl
-on v.ID_PLAZA = pl.ID_PLAZA
-group by p.SKU, pl.ESTADO;
+
+/*
+create view prod_est
+as*/
+WITH inventory
+AS (
+	SELECT row_number() over(partition by x.ESTADO order by x.ventas_totales desc) row_num , 
+			 x.ventas_totales,
+			 x.SKU,
+			 x.ESTADO 
+    from (
+			select 
+			sum(v.IMP_VENTA_BRUTA) as ventas_totales,
+			 p.SKU,
+			 pl.ESTADO 
+			from ventas v
+			join productos p
+			on v.ID_PRODUCTO = p.ID_PRODUCTO
+			join (SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO, pl.ID_PLAZA
+					from ventas v
+					join plazas pl
+					on v.ID_PLAZA = pl.ID_PLAZA
+					group by pl.ESTADO
+					order by 1 desc
+					limit 6) as pl
+			on v.ID_PLAZA = pl.ID_PLAZA
+			group by p.SKU, pl.ESTADO
+			order by 1 desc
+		) x
+)
+select i.row_num, i.ventas_totales,
+	 i.SKU,
+	 i.ESTADO
+from inventory i
+where i.row_num <= 5;
