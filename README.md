@@ -28,11 +28,13 @@
 	 También te sugerimos el uso de Trello. --->
 
 - [x] Elección de fuente de datos
-- [ ] Definición de la estructura del proyecto
-- [ ] Definición de la estructura de la base de datos
-- [ ] Carga de datos
+- [x] Definición de la estructura del proyecto
+- [x] Definición de la estructura de la base de datos
+- [x] Carga de datos
+- [x] Limpieza de datos
+- [x] Conexión a la base de datos con python
+- [X] Creación de libreta
 
-Agrega más tareas a este *checklist*.
 
 ### Avances 📌
 
@@ -42,10 +44,8 @@ Agrega más tareas a este *checklist*.
 
      Una vez finalizado el proyecto te sugerimos añadir una nueva sección de Resultados. --->
 
-- [Fuente de datos](link)
-- [Estructura del proyecto](link)
-- [Estructura de la base de datos](link)
-- [Primeras consultas](link)
+- [Fuente de datos (*.csv)](https://github.com/JOBA25/Proyecto_Bedu_Sello_Rojo/tree/master/utilidades_proyecto)
+- [Primeras consultas (querys)](https://github.com/JOBA25/Proyecto_Bedu_Sello_Rojo/tree/master/utilidades_proyecto)
 
 Agrega más avances.
 
