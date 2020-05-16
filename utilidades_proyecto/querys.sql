@@ -31,7 +31,6 @@ from ventas v
 join productos p
 on v.ID_PRODUCTO = p.ID_PRODUCTO
 join plazas pl
-where pl.ESTADO = "Distrito Federal"
 group by p.SKU
 order by 1 desc;
 
@@ -77,7 +76,7 @@ order by 1 desc;
 
 /**********************************************************************************************************************/
 /*         productos que generaron más ventas en los 5 estados con mayores ventas*/
-
+/*                            ya en la libreta                                    */
 /*
 create view prod_est
 as*/
@@ -107,8 +106,27 @@ AS (
 			order by 1 desc
 		) x
 )
-select i.row_num, i.ventas_totales,
+select i.ventas_totales,
 	 i.SKU,
 	 i.ESTADO
 from inventory i
 where i.row_num <= 5;
+
+
+
+
+
+
+/**********************************************************************************************************************************/
+/*                                                    cadenas                                                                     */ 
+
+create view cad
+as
+select sum(v.IMP_VENTA_BRUTA) ventas, cl.CADENA
+from ventas v
+join clientes cl
+on v.Clave_Cliente = cl.Clave_Cliente
+where cl.CADENA not Like  "%Z IND%" and cl.CADENA not Like  "(PENAL)"
+group by cl.CADENA
+having sum(v.IMP_VENTA_BRUTA) > 0
+order by 1 desc;
