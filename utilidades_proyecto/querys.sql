@@ -114,12 +114,9 @@ where i.row_num <= 5;
 
 
 
-
-
-
 /**********************************************************************************************************************************/
 /*                                                    cadenas                                                                     */ 
-
+/*                                                 ya en la libreta                                                                 */
 create view cad
 as
 select sum(v.IMP_VENTA_BRUTA) ventas, cl.CADENA
@@ -130,3 +127,44 @@ where cl.CADENA not Like  "%Z IND%" and cl.CADENA not Like  "(PENAL)"
 group by cl.CADENA
 having sum(v.IMP_VENTA_BRUTA) > 0
 order by 1 desc;
+
+
+
+/**********************************************************************************************************************************/
+/*                                                cadenas por estados                                                             */
+
+create view cad_estado
+as
+WITH inventory
+AS (
+	SELECT row_number() over(partition by x.ESTADO order by x.ventas_totales desc) row_num , 
+			 x.ventas_totales,
+			 x.CADENA,
+			 x.ESTADO 
+    from (
+			select 
+			sum(v.IMP_VENTA_BRUTA) as ventas_totales,
+			 c.CADENA ,
+			 pl.ESTADO 
+			from ventas v
+			join clientes c 
+			on v.Clave_Cliente = c.Clave_Cliente
+			join (SELECT sum(v.IMP_VENTA_BRUTA) as ventas , pl.ESTADO, pl.ID_PLAZA
+					from ventas v
+					join plazas pl
+					on v.ID_PLAZA = pl.ID_PLAZA
+					group by pl.ESTADO
+					order by 1 desc
+					limit 6) as pl
+			on v.ID_PLAZA = pl.ID_PLAZA
+            where c.CADENA not Like  "%Z IND%" and c.CADENA not Like  "(PENAL)"
+			group by c.CADENA , pl.ESTADO
+			order by 1 desc
+		) x
+)
+select 
+	i.ventas_totales,
+	 i.CADENA,
+	 i.ESTADO
+from inventory i
+where i.row_num <= 5;
