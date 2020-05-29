@@ -23,17 +23,29 @@ on v.Clave_Cliente = cl.Clave_Cliente;
 
 
 /**************************************************ya en la libreta de python*************************************************/
-/* tabla con el total de ventas por producto*/
-/*create view ventas_prod
-as*/
-SELECT sum(v.IMP_VENTA_BRUTA) as ventas_totales, p.SKU 
-from ventas v
-join productos p
-on v.ID_PRODUCTO = p.ID_PRODUCTO
-join plazas pl
-group by p.SKU
-order by 1 desc;
 
+/* De esta tabla se planea sacar el top 10 de productos más y menos vendidos
+   fue necesario obtener aquellos productos que tienen registros
+   en todos los meses, ya que hay productos que tienen solo un registro en todo el año lo cual veria afectado 
+   el análisis de los productos menos vendidos, ya que
+   por ejemplo hay un producto del cual solo se tiene UN registro en FEBRERO 
+*/
+
+create view ventas_prod
+as
+select sum(v.IMP_VENTA_BRUTA) as ventas, f.SKU
+from ventas v
+join	(SELECT  count(t.t) as num_registros, t.SKU, t.ID_PRODUCTO           
+		from    (select month(v.fecha) t, p.SKU, p.ID_PRODUCTO	
+				from ventas v
+				join productos p
+				on v.ID_PRODUCTO = p.ID_PRODUCTO
+				group by  month(v.fecha), p.SKU) as t
+		group by t.SKU) as f
+on v.ID_PRODUCTO = f.ID_PRODUCTO
+where f.num_registros = 12
+group by f.SKU
+order by 1 desc;
 
 /**************************************************ya en la libreta de python*************************************************/
 /*ventas por Estado en plazas*/
@@ -133,8 +145,8 @@ order by 1 desc;
 /**********************************************************************************************************************************/
 /*                                                cadenas por estados                                                             */
 
-create view cad_estado
-as
+/*create view cad_estado
+as*/
 WITH inventory
 AS (
 	SELECT row_number() over(partition by x.ESTADO order by x.ventas_totales desc) row_num , 
