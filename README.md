@@ -6,7 +6,7 @@
 
 ### ¿Cuál es la necesidad o problema a resolver? 🚀
 
-:v
+Hacer un análisis de los datos del año 2017 de la empresa _Sello Rojo_
 
 <!-- Agrega aquí la necesidad o problemática que esperas resolver con tu proyecto y a qué sector
      beneficiará. -->
