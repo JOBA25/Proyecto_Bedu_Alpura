@@ -63,10 +63,10 @@ limit 5;
 
 /**************************************************ya en la libreta de python*************************************************/
 /*ventas por mes*/
-/*create view ventas_mes
-as*/
+create view ventas_mes_2018
+as
 select sum(v.IMP_VENTA_BRUTA) as ventas, monthname(v.fecha) as Mes
-from ventas v
+from ventas_2018_efm v
 group by 2;
 /*order by 1 asc;
 */
@@ -180,3 +180,57 @@ select
 	 i.ESTADO
 from inventory i
 where i.row_num <= 5;
+
+
+
+
+/***************************************************************************************************************************************/
+/*                                            Lifetime Value 
+
+/*
+Calcula el valor de compra medio: calcula este número dividiendo los ingresos totales de tu compañía en un período de tiempo 
+								  (generalmente un año) por el número de compras en el transcurso de ese mismo período de tiempo.
+
+Lo siguiente es calcular la tasa de frecuencia de compra media: calcula este número dividiendo el número de compras en el transcurso del
+																período de tiempo por el número de clientes únicos que hicieron compras 
+                                                                durante ese período de tiempo.
+                                                                
+Calcular el valor del cliente: calcula este número multiplicando el valor de compra promedio por 1 y restando la tasa de frecuencia de
+							   compra promedio de ese número.
+                               
+Calcula la media de vida útil del cliente: calcula este número promediando el número de años que un cliente continúa comprando en tu 
+											compañía.
+                                            
+Luego, calcula el Lifetime Value multiplicando el valor del cliente por la vida útil del cliente. Esto te dará una estimación de la 
+		cantidad de ingresos que puedes esperar que genere un cliente medio para tu empresa a lo largo de tu relación con él.
+
+
+*/
+
+create view ltv
+as
+select v.FECHA, v.CANTIDAD_VENTA, v.IMP_VENTA_BRUTA, v.ID_PRODUCTO, 
+		cl.Clave_Cliente, cl.NUM_CLIENTE, cl.RAZON_SOCIAL, cl.SUCURSAL, cl.CADENA
+from ventas v
+join clientes cl
+on v.Clave_Cliente = cl.Clave_Cliente;
+
+
+
+
+select count(*), sum(v.IMP_VENTA_BRUTA), cl.Clave_Cliente
+		from clientes cl
+		join ventas v 
+		on cl.Clave_Cliente = v.Clave_Cliente
+		group by cl.Clave_Cliente
+        order by 1 desc ;
+
+
+
+
+
+
+
+
+
+
