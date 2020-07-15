@@ -21,7 +21,6 @@ así despues utilizar Python para la graficación de los mismos
 
 ### ¿Cómo lo vas a hacer? 📋
 
-:v
 <!-- Añade aquí un checklist de tareas y el estado de tus avances, añade tus avances en otras
 	 carpetas y compartelos con el mundo en la sección de avances, no olvides actualizar esta lista
 	 constantemente para organizarte mejor.
