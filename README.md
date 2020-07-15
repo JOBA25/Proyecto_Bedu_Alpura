@@ -13,7 +13,8 @@ Hacer un análisis de los datos del año 2017 de la empresa _Sello Rojo_
 
 ### ¿Cuál es la propuesta para resolver esa necesidad o problema? 💡
 
-:v
+Para ello pretendo utilizar MySQL como base de datos donde almacenar y hacer limpieza de los datos, 
+así despues utilizar Python para la graficación de los mismos 
 <!-- Describe cómo planeas solucionar el problema. Ejemplo: Voy a consultar una base de datos del
 	 sector salud para predecir el número de compradores de un medicamento. Para ello pretendo 
 	 usar Python porque ... --->
